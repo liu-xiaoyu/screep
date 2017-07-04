@@ -1,4 +1,13 @@
-var listOfRoles = ['harvester', 'lorry', 'claimer', 'upgrader', 'repairer', 'builder', 'wallRepairer'];
+var listOfRoles = [
+    {name:'harvester', min:'5'},
+    {name:'lorry', min:'1'},
+    {name:'claimer', min:'1'},
+    {name:'upgrader', min: '5'},
+    {name:'repairer', min: '5'},
+    {name:'builder', min: '5'},
+    {name:'wallRepairer', min:'1'}
+    ];
+
 
 // create a new function for StructureSpawn
 StructureSpawn.prototype.spawnCreepsIfNecessary =
@@ -8,14 +17,16 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         // find all creeps in room
         /** @type {Array.<Creep>} */
         let creepsInRoom = room.find(FIND_MY_CREEPS);
-        
+       
         // count the number of creeps alive for each role in this room
         // _.sum will count the number of properties in Game.creeps filtered by the
         //  arrow function, which checks for the creep being a specific role
         /** @type {Object.<string, number>} */
         let numberOfCreeps = {};
-        for (let role of listOfRoles) {
-            numberOfCreeps[role] = _.sum(creepsInRoom, (c) => c.memory.role == role);
+        for (let role of listOfRoles) { 
+            let rolename = role['name'];
+            numberOfCreeps[rolename] = _.sum(creepsInRoom, 
+                (c) => c.memory.role == rolename);
         }
         let maxEnergy = room.energyCapacityAvailable;
         let name = undefined;
@@ -61,8 +72,9 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         // if none of the above caused a spawn command check for other roles
         if (name == undefined) {
             for (let role of listOfRoles) {
+                let rolename = role['name'];
                 // check for claim order
-                if (role == 'claimer' && this.memory.claimRoom != undefined) {
+                if (rolename == 'claimer' && this.memory.claimRoom != undefined) {
                     // try to spawn a claimer
                     name = this.createClaimer(this.memory.claimRoom);
                     // if that worked
@@ -72,12 +84,12 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                     }
                 }
                 // if no claim order was found, check other roles
-                else if (numberOfCreeps[role] < this.memory.minCreeps[role]) {
-                    if (role == 'lorry') {
+                else if (numberOfCreeps[rolename] < role['min']) {
+                    if (rolename == 'lorry') {
                         name = this.createLorry(150);
                     }
                     else {
-                        name = this.createCustomCreep(maxEnergy, role);
+                        name = this.createCustomCreep(maxEnergy, rolename);
                     }
                     break;
                 }
@@ -103,7 +115,8 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         if (name != undefined && _.isString(name)) {
             console.log(this.name + " spawned new creep: " + name + " (" + Game.creeps[name].memory.role + ")");
             for (let role of listOfRoles) {
-                console.log(role + ": " + numberOfCreeps[role]);
+                let rolename = role['name'];
+                console.log(rolename + ": " + numberOfCreeps[rolename]);
             }
             for (let roomName in numberOfLongDistanceHarvesters) {
                 console.log("LongDistanceHarvester" + roomName + ": " + numberOfLongDistanceHarvesters[roomName]);
