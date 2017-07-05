@@ -1,12 +1,14 @@
 var listOfRoles = [
-    {name:'harvester', min:'3'},
-    {name:'upgrader', min: '10'},
-    {name:'repairer', min: '10'},
-    {name:'builder', min: '8'},
+    {name:'harvester', min:'2'},
+    {name:'upgrader', min: '8'},
+    {name:'claimer', min: '1'},
+    {name:'repairer', min: '6'},
+    {name:'builder', min: '3'},
     {name:'wallRepairer', min:'1'},
+    {name:'lorry', min:'1'},
     ];
 
-var undocumented = [ 'lorry', 'claimer', 'miner' ];
+var undocumented = [ 'lorry', 'miner' ];
 
 // create a new function for StructureSpawn
 StructureSpawn.prototype.spawnCreepsIfNecessary =
@@ -16,11 +18,6 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         // find all creeps in room
         /** @type {Array.<Creep>} */
         let creepsInRoom = room.find(FIND_MY_CREEPS);
-        if (creepsInRoom.length <= 3){
-            for (let creep of creepsInRoom){
-                creep.memory.role = 'harvester';
-            }
-        }       
         // count the number of creeps alive for each role in this room
         // _.sum will count the number of properties in Game.creeps filtered by the
         //  arrow function, which checks for the creep being a specific role
@@ -33,20 +30,31 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         }
         let maxEnergy = room.energyCapacityAvailable;
         let name = undefined;
-
+        if (creepsInRoom.length < 2 && numberOfCreeps['miner']==0){
+            for (let creep of creepsInRoom){
+                creep.memory.role = 'harvester';
+            }
+        }       
         // if no harvesters are left AND either no miners or no lorries are left
         //  create a backup creep
-        if (numberOfCreeps['harvester'] == 0 && numberOfCreeps['lorry'] == 0) {
+        if (!(numberOfCreeps['harvester']> 0) && !(numberOfCreeps['lorry'] > 0)) {
             // if there are still miners or enough energy in Storage left
-            if (numberOfCreeps['miner'] > 0 ||
-                (room.storage != undefined && room.storage.store[RESOURCE_ENERGY] >= 150 + 550)) {
+            if (numberOfCreeps['miner'] > numberOfCreeps['lorry']){ 
+//            if (numberOfCreeps['miner'] > 0 ||
+//                (room.storage != undefined && room.storage.store[RESOURCE_ENERGY] >= 150 + 550)) {
                 // create a lorry
+                console.log('create lorry');
                 name = this.createLorry(150);
+                if (!(name>0)){
+                    console.log("lorry creation failed "+name);
+                    name = this.createCustomCreep(room.energyAvailable, 'harvester');
+                }
             }
             // if there is no miner and not enough energy in Storage left
             else {
                 // create a harvester because it can work on its own
                 name = this.createCustomCreep(room.energyAvailable, 'harvester');
+                console.log('create emergency harvester '+name);
             }
         }
         // if no backup creep is required
@@ -65,7 +73,6 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                     // if there is a container next to the source
                     if (containers.length > 0) {
                         // spawn a miner
-//                        console.log(containers.length);                           
                         name = this.createMiner(source.id);
                         break;
                     }
@@ -83,21 +90,25 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 }
             }
         }
+
+        if (name == undefined || !(name>0)) {
+            // check for claim order
+
+            if (this.room.memory.claimRoom != undefined) {
+                // try to spawn a claimer
+                name = this.createClaimer(this.room.memory.claimRoom);
+                // if that worked
+                if (name != undefined && _.isString(name)) {
+                    // delete the claim order
+                    delete this.memory.claimRoom;
+                }
+            }
+        }
         if (name == undefined || !(name>0)) {
             for (let role of listOfRoles) {
                 let rolename = role['name'];
-                // check for claim order
-                if (rolename == 'claimer' && this.memory.claimRoom != undefined) {
-                    // try to spawn a claimer
-                    name = this.createClaimer(this.memory.claimRoom);
-                    // if that worked
-                    if (name != undefined && _.isString(name)) {
-                        // delete the claim order
-                        delete this.memory.claimRoom;
-                    }
-                }
                 // if no claim order was found, check other roles
-                else if (numberOfCreeps[rolename] < role['min']) {
+                if (numberOfCreeps[rolename] < role['min'] && rolename != 'claimer') {
                     if (rolename == 'lorry') {
                         name = this.createLorry(150);
                     }
@@ -194,7 +205,8 @@ StructureSpawn.prototype.createLongDistanceHarvester =
 // create a new function for StructureSpawn
 StructureSpawn.prototype.createClaimer =
     function (target) {
-        return this.createCreep([CLAIM, MOVE, MOVE, MOVE], undefined, { role: 'claimer', target: target });
+        let name = this.createCreep([CLAIM, MOVE, MOVE], undefined, { role: 'claimer', target: target });
+        return name;
     };
 
 // create a new function for StructureSpawn
