@@ -10,6 +10,7 @@ module.exports.loop = function() {
         // and checking if the creep is still alive
         if (Game.creeps[name] == undefined) {
             // if not, delete the memory entry
+            console.log("cleaning memory of "+name);
             delete Memory.creeps[name];
         }
     }
@@ -34,9 +35,11 @@ module.exports.loop = function() {
             spawn.memory.highestlvl = spawn.room.controller.level;
         }else if (spawn.memory.highestlvl < spawn.room.controller.level){
             let x = spawn.pos['x']-3;
-            let y = spawn.pos['y']-spawn.memory.highestlvl;
+            let y = spawn.pos['y']-spawn.memory.highestlvl+1;
             spawn.room.createFlag(x,y,'extensionSites',8,9);
-
+            for (let source of spawn.room.memory.sources){
+                spawn.room.createFlag(source['x'], source['y'], source['x']+source['y'], 7,8);
+            }
             spawn.memory.highestlvl = spawn.room.controller.level;
         }
         let brownGreyFlags = _.filter(Game.flags, f => f.color == 8 && f.secondaryColor == 9);
@@ -45,13 +48,15 @@ module.exports.loop = function() {
             flag.remove();
         }
         if (spawn.room.controller.level == 3 && spawn.memory.road == undefined){
-            spawn.memory.road = false;
+            spawn.memory.road = 3;
         }
-        if (spawn.memory.road == false){
-            for (let source of spawn.room.memory.sources){
+        if (spawn.memory.road > 0){
+//            for (let source of spawn.room.memory.sources){
+            for (let source of spawn.room.find(FIND_SOURCES)){
                 construct.road(spawn, source);
             }
-            spawn.memory.road = true;
+            construct.road(spawn, spawn.room.controller);
+            spawn.memory.road --;
         }
     }
     // find all towers

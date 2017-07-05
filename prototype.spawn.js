@@ -1,13 +1,12 @@
 var listOfRoles = [
-    {name:'harvester', min:'5'},
-    {name:'lorry', min:'1'},
-    {name:'claimer', min:'1'},
-    {name:'upgrader', min: '5'},
-    {name:'repairer', min: '5'},
-    {name:'builder', min: '5'},
-    {name:'wallRepairer', min:'1'}
+    {name:'harvester', min:'3'},
+    {name:'upgrader', min: '10'},
+    {name:'repairer', min: '10'},
+    {name:'builder', min: '8'},
+    {name:'wallRepairer', min:'1'},
     ];
 
+var undocumented = [ 'lorry', 'claimer', 'miner' ];
 
 // create a new function for StructureSpawn
 StructureSpawn.prototype.spawnCreepsIfNecessary =
@@ -17,7 +16,11 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         // find all creeps in room
         /** @type {Array.<Creep>} */
         let creepsInRoom = room.find(FIND_MY_CREEPS);
-       
+        if (creepsInRoom.length <= 3){
+            for (let creep of creepsInRoom){
+                creep.memory.role = 'harvester';
+            }
+        }       
         // count the number of creeps alive for each role in this room
         // _.sum will count the number of properties in Game.creeps filtered by the
         //  arrow function, which checks for the creep being a specific role
@@ -62,6 +65,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                     // if there is a container next to the source
                     if (containers.length > 0) {
                         // spawn a miner
+//                        console.log(containers.length);                           
                         name = this.createMiner(source.id);
                         break;
                     }
@@ -70,7 +74,16 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         }
 
         // if none of the above caused a spawn command check for other roles
-        if (name == undefined) {
+        if (name == undefined || !(name>0)) {
+            for (let role of listOfRoles){
+                let rolename = role['name'];
+                if (rolename != 'claimer' && rolename != 'lorry' && rolename != 'miner' && numberOfCreeps[rolename]==0){
+                    name = this.createCustomCreep(maxEnergy, rolename);
+                    break;
+                }
+            }
+        }
+        if (name == undefined || !(name>0)) {
             for (let role of listOfRoles) {
                 let rolename = role['name'];
                 // check for claim order
@@ -181,7 +194,7 @@ StructureSpawn.prototype.createLongDistanceHarvester =
 // create a new function for StructureSpawn
 StructureSpawn.prototype.createClaimer =
     function (target) {
-        return this.createCreep([CLAIM, MOVE], undefined, { role: 'claimer', target: target });
+        return this.createCreep([CLAIM, MOVE, MOVE, MOVE], undefined, { role: 'claimer', target: target });
     };
 
 // create a new function for StructureSpawn

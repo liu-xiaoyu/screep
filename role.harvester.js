@@ -13,6 +13,7 @@ module.exports = {
             creep.memory.working = true;
         }
 
+
         // if creep is supposed to transfer energy to a structure
         if (creep.memory.working == true) {
             // find closest spawn, extension or tower which is not full
@@ -41,7 +42,7 @@ module.exports = {
         }
         // if creep is supposed to harvest energy from source
         else {
-            creep.getEnergy(false, true);
+            creep.getEnergy(false,true);
         }
     }
 };

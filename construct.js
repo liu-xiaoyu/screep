@@ -21,6 +21,9 @@ var construct = {
         for (let dot of path){
             source.room.createConstructionSite(dot['x'],dot['y'],STRUCTURE_ROAD);
         }
+    },
+    container: function(flag){
+
     }
 }
 module.exports = construct;
