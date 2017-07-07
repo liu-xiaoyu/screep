@@ -136,14 +136,15 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         // if none of the above caused a spawn command check for LongDistanceHarvesters
         /** @type {Object.<string, number>} */
         let numberOfLongDistanceHarvesters = {'W6N8':1};
-        if (name == undefined) {
+        if (name == undefined || !(name>0)) {
             // count the number of long distance harvesters globally
-            for (let roomName in this.memory.minLongDistanceHarvesters) {
+            for (let roomName in numberOfLongDistanceHarvesters) {
                 numberOfLongDistanceHarvesters[roomName] = _.sum(Game.creeps, (c) =>
                     c.memory.role == 'longDistanceHarvester' && c.memory.target == roomName)
 
-                if (numberOfLongDistanceHarvesters[roomName] < this.memory.minLongDistanceHarvesters[roomName]) {
+                if (numberOfLongDistanceHarvesters[roomName] < numberOfLongDistanceHarvesters[roomName]) {
                     name = this.createLongDistanceHarvester(maxEnergy, 2, room.name, roomName, 0);
+                    console.log('LD harvester: ' + name);
                 }
             }
         }
