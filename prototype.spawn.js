@@ -1,6 +1,6 @@
 var listOfRoles = [
     {name:'harvester', min:'1'},
-    {name:'upgrader', min: '1'},
+    {name:'upgrader', min: '2'},
     {name:'claimer', min: '1'},
     {name:'repairer', min: '1'},
     {name:'builder', min: '1'},
