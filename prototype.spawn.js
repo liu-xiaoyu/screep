@@ -5,7 +5,7 @@ var listOfRoles = [
     {name:'repairer', min: '1'},
     {name:'builder', min: '1'},
     {name:'wallRepairer', min:'1'},
-    {name:'lorry', min:'1'},
+    {name:'lorry', min:'2'},
     ];
 
 var undocumented = [ {name: 'miner', min:'1'},
@@ -121,7 +121,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 let rolename = role['name'];
                 // if no claim order was found, check other roles
                 if (numberOfCreeps[rolename] < role['min'] && rolename != 'claimer') {
-                    if (rolename == 'lorry') {
+                    if (rolename == 'lorry' ) {
                         //name = this.createLorry(150);
                         name = this.createLorry(maxEnergy);
                     }
@@ -135,16 +135,17 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         
         // if none of the above caused a spawn command check for LongDistanceHarvesters
         /** @type {Object.<string, number>} */
-        let numberOfLongDistanceHarvesters = {'W6N8':1};
+        let numberOfLongDistanceHarvesters = {};
+        let minLDHarvesters = {'W6N8': 2,
+                                'W5N7': 1}
         if (name == undefined || !(name>0)) {
             // count the number of long distance harvesters globally
-            for (let roomName in numberOfLongDistanceHarvesters) {
+            for (let roomName in minLDHarvesters) {
                 numberOfLongDistanceHarvesters[roomName] = _.sum(Game.creeps, (c) =>
                     c.memory.role == 'longDistanceHarvester' && c.memory.target == roomName)
 
-                if (numberOfLongDistanceHarvesters[roomName] < numberOfLongDistanceHarvesters[roomName]) {
+                if (minLDHarvesters[roomName] > numberOfLongDistanceHarvesters[roomName]) {
                     name = this.createLongDistanceHarvester(maxEnergy, 2, room.name, roomName, 0);
-                    console.log('LD harvester: ' + name);
                 }
             }
         }
