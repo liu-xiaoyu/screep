@@ -10,9 +10,9 @@ module.exports = {
         }
         else {
             // try to claim controller
-            if (creep.claimController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+            if (creep.claimController(creep.memory.target.controller) == ERR_NOT_IN_RANGE) {
                 // move towards the controller
-                creep.moveTo(creep.room.controller);
+                creep.moveTo(creep.memory.target.controller);
             }
         }
     }

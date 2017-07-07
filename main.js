@@ -34,12 +34,15 @@ module.exports.loop = function() {
         if (spawn.memory.highestlvl == undefined){
             spawn.memory.highestlvl = spawn.room.controller.level;
         }else if (spawn.memory.highestlvl < spawn.room.controller.level){
+            /*
             let x = spawn.pos['x']-3;
-            let y = spawn.pos['y']+spawn.memory.highestlvl+spawn.memory.highestlvl%2;
+            //let y = spawn.pos['y']+spawn.memory.highestlvl+spawn.memory.highestlvl%2;
+            let y = spawn.pos['y']
             spawn.room.createFlag(x,y,'extensionSites',8,9);
             for (let source of spawn.room.memory.sources){
                 spawn.room.createFlag(source['x'], source['y'], source['x']+source['y'], 7,8);
             }
+            */
             spawn.memory.highestlvl = spawn.room.controller.level;
         }
         let brownGreyFlags = _.filter(Game.flags, f => f.color == 8 && f.secondaryColor == 9);
