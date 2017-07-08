@@ -82,7 +82,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
 //                name = this.createLorry(150);
                 name = this.createLorry(maxEnergy);
                 if (!(name>0)){
-                    name = this.createLorry(150);
+                    name = this.createLorry(room.eneryAvailable);
 //                    name = this.createCustomCreep(room.energyAvailable, 'harvester');
                 }
             }
