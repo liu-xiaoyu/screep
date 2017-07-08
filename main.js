@@ -50,16 +50,25 @@ module.exports.loop = function() {
             construct.extension(flag, STRUCTURE_EXTENSION);
             flag.remove();
         }
-        if (spawn.room.controller.level == 3 && spawn.memory.road == undefined){
-            spawn.memory.road = 3;
+        if (spawn.room.controller.level == 2 && spawn.memory.container == undefined){
+            spawn.memory.container = false;
         }
-        if (spawn.memory.road > 0){
+        if (spawn.memory.container == false){
+            for (let source of spawn.room.memory.sources){
+                construct.container(spawn.room, Game.getObjectById(source.id))
+            }
+            spawn.memory.container = true;
+        }
+        if (spawn.room.controller.level == 3 && spawn.memory.road == undefined){
+            spawn.memory.road = false;
+        }
+        if (spawn.memory.road == false){
 //            for (let source of spawn.room.memory.sources){
             for (let source of spawn.room.find(FIND_SOURCES)){
                 construct.road(spawn, source);
             }
             construct.road(spawn, spawn.room.controller);
-            spawn.memory.road --;
+            spawn.memory.road = true;
         }
     }
     // find all towers

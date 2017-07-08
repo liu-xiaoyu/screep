@@ -22,8 +22,13 @@ var construct = {
             source.room.createConstructionSite(dot['x'],dot['y'],STRUCTURE_ROAD);
         }
     },
-    container: function(flag){
-
+    container: function(room,target){
+        let sites = room.lookForAtArea('terrain', target.pos['y']-1, target.pos['x']-1 ,target.pos['y']+1,target.pos['x']+1, true)
+        for (let site of sites){
+            if (site['terrain']=='plain'){
+                room.createConstructionSite(site['x'],site['y'],STRUCTURE_CONTAINER);
+            }
+        }
     }
 }
 module.exports = construct;

@@ -52,7 +52,6 @@ module.exports = {
             // if we can't fine one
             else {
                 // look for construction sites
-                consle.log('wallRepairer become builder')
                 roleBuilder.run(creep);
             }
         }

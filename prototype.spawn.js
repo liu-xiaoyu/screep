@@ -11,6 +11,9 @@ var listOfRoles = [
 var undocumented = [ {name: 'miner', min:'1'},
                      {name: 'longDistanceHarvester', min:'1'}
                      ];
+var minLDHarvesters = { 'W6N8': 2,
+                        'W5N7': 1,
+                        'W4N8': 1}
 
 // create a new function for StructureSpawn
 StructureSpawn.prototype.spawnCreepsIfNecessary =
@@ -136,8 +139,6 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         // if none of the above caused a spawn command check for LongDistanceHarvesters
         /** @type {Object.<string, number>} */
         let numberOfLongDistanceHarvesters = {};
-        let minLDHarvesters = {'W6N8': 2,
-                                'W5N7': 1}
         if (name == undefined || !(name>0)) {
             // count the number of long distance harvesters globally
             for (let roomName in minLDHarvesters) {
