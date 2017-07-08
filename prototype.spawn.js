@@ -12,7 +12,7 @@ var undocumented = [ {name: 'miner', min:'1'},
                      {name: 'longDistanceHarvester', min:'1'}
                      ];
 var minLDHarvesters = { 'W6N8': 2,
-                        'W5N7': 1,
+                        'W5N7': 2,
                         'W4N8': 1}
 
 // create a new function for StructureSpawn
@@ -107,7 +107,6 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
 
         if (name == undefined || !(name>0)) {
             // check for claim order
-
             if (this.room.memory.claimRoom != undefined) {
                 // try to spawn a claimer
                 name = this.createClaimer(this.room.memory.claimRoom);

@@ -1,3 +1,4 @@
+var roleBuilder = require('role.builder');
 module.exports = {
     // a function to run the logic for this role
     /** @param {Creep} creep */
@@ -43,10 +44,14 @@ module.exports = {
             }
             // if not in home room...
             else {
-                // find exit to home room
-                var exit = creep.room.findExitTo(creep.memory.home);
-                // and move to exit
-                creep.moveTo(creep.pos.findClosestByRange(exit));
+                if (creep.room.controller.my){
+                    roleBuilder.run(creep);
+                }else{
+                    // find exit to home room
+                    var exit = creep.room.findExitTo(creep.memory.home);
+                    // and move to exit
+                    creep.moveTo(creep.pos.findClosestByRange(exit));
+                }
             }
         }
         // if creep is supposed to harvest energy from source
@@ -54,14 +59,11 @@ module.exports = {
             // if in target room
             if (creep.room.name == creep.memory.target) {
                 // find source
-                creep.getEnergy(false,true);
-//                var source = creep.room.find(FIND_SOURCES)[creep.memory.sourceIndex];
-//
-//                // try to harvest energy, if the source is not in range
-//                if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-//                    // move towards the source
-//                    creep.moveTo(source);
-//                }
+                if (creep.room.controller.my){
+                    roleBuilder.run(creep);
+                }else{
+                    creep.getEnergy(false,true);
+                }
             }
             // if not in target room
             else {
