@@ -20,6 +20,13 @@ Creep.prototype.runRole =
     @param {bool} useSource */
 Creep.prototype.getEnergy =
     function (useContainer, useSource) {
+        let dropped_energy = this.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
+        if (dropped_energy != undefined){
+            if (this.pickup(dropped_energy) == ERR_NOT_IN_RANGE){
+                this.moveTo(dropped_energy);
+            }
+        }
+
         /** @type {StructureContainer} */
         let container;
         // if the Creep should look for containers
