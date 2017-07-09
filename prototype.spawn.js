@@ -1,4 +1,3 @@
-var listOfRoles = []
 var roleNameList = [
     'harvester',
     'upgrader',
@@ -8,7 +7,6 @@ var roleNameList = [
     'wallRepairer',
     'lorry'
 ];
-var adjacentRooms = []
 var undocumented = [ {name: 'miner', min:'1'},
                      {name: 'longDistanceHarvester', min:'1'}
                      ];
@@ -20,6 +18,8 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
     function () {
         /** @type {Room} */
         let room = this.room;
+        var listOfRoles = []
+        var adjacentRooms = []
         // find all creeps in room
         /** @type {Array.<Creep>} */
         let creepsInRoom = room.find(FIND_MY_CREEPS);
@@ -29,17 +29,6 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         // _.sum will count the number of properties in Game.creeps filtered by the
         //  arrow function, which checks for the creep being a specific role
         /** @type {Object.<string, number>} */
-        let numberOfCreeps = {};
-        for (let role of listOfRoles) { 
-            let rolename = role['name'];
-            numberOfCreeps[rolename] = _.sum(creepsInRoom, 
-                (c) => c.memory.role == rolename);
-        }
-        for (let role of undocumented) {
-            let rolename = role['name'];
-            numberOfCreeps[rolename] = _.sum(creepsInRoom, 
-                (c) => c.memory.role == rolename);
-        }
         // generate listOfRoles
         for (let rolename of roleNameList){
             if (rolename == 'harvester'){
@@ -57,6 +46,18 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 }
                 listOfRoles.push({name:rolename,min:'1'})
             }
+        }
+
+        let numberOfCreeps = {};
+        for (let role of listOfRoles) { 
+            let rolename = role['name'];
+            numberOfCreeps[rolename] = _.sum(creepsInRoom, 
+                (c) => c.memory.role == rolename);
+        }
+        for (let role of undocumented) {
+            let rolename = role['name'];
+            numberOfCreeps[rolename] = _.sum(creepsInRoom, 
+                (c) => c.memory.role == rolename);
         }
         /*
         // generate adjacent room names
@@ -163,7 +164,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         // if none of the above caused a spawn command check for LongDistanceHarvesters
         /** @type {Object.<string, number>} */
         let numberOfLongDistanceHarvesters = {};
-        if (name == undefined || !(name>0)) {
+        if (roomControllerLevel >= 3 && (name == undefined || !(name>0))) {
             // count the number of long distance harvesters globally
             for (let roomName in minLDHarvesters) {
                 numberOfLongDistanceHarvesters[roomName] = _.sum(Game.creeps, (c) =>
