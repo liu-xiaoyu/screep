@@ -12,7 +12,8 @@ var undocumented = [ {name: 'miner', min:'1'},
                      {name: 'longDistanceHarvester', min:'1'}
                      ];
 var minLDHarvesters = { 'W6N8': 2,
-                        'W4N8': 1}
+                        'W4N8': 1,
+                        'W5N7': 2}
 
 // create a new function for StructureSpawn
 StructureSpawn.prototype.spawnCreepsIfNecessary =

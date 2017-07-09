@@ -1,4 +1,5 @@
 var roleBuilder = require('role.builder');
+var roleHarvester = require('role.harvester');
 module.exports = {
     // a function to run the logic for this role
     /** @param {Creep} creep */
@@ -45,6 +46,9 @@ module.exports = {
             // if not in home room...
             else {
                 if (creep.room.controller.my){
+                    if (!(creep.room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_SPAWN}})>0)){
+                        roleHarvester.run(creep);
+                    }
                     roleBuilder.run(creep);
                 }else{
                     // find exit to home room
@@ -60,6 +64,9 @@ module.exports = {
             if (creep.room.name == creep.memory.target) {
                 // find source
                 if (creep.room.controller.my){
+                    if (!(creep.room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_SPAWN}})>0)){
+                        roleHarvester.run(creep);
+                    }
                     roleBuilder.run(creep);
                 }else{
                     creep.getEnergy(false,true);
