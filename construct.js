@@ -27,6 +27,7 @@ var construct = {
         for (let site of sites){
             if (site['terrain']=='plain'){
                 room.createConstructionSite(site['x'],site['y'],STRUCTURE_CONTAINER);
+                break;
             }
         }
     }

@@ -4,6 +4,7 @@ module.exports = {
     // a function to run the logic for this role
     /** @param {Creep} creep */
     run: function (creep) {
+        let weight = _.sum(creep.carry)
         // if target is defined and creep is not in target room
         if (creep.memory.target != undefined && creep.room.name != creep.memory.target) {
             // find exit to target room
@@ -20,7 +21,7 @@ module.exports = {
             creep.memory.working = false;
         }
         // if creep is harvesting energy but is full
-        else if (creep.memory.working == false && creep.carry.energy == creep.carryCapacity) {
+        else if (creep.memory.working == false && weight == creep.carryCapacity) {
             // switch state
             creep.memory.working = true;
         }

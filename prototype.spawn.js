@@ -1,6 +1,6 @@
 var listOfRoles = [
     {name:'harvester', min:'1'},
-    {name:'upgrader', min: '2'},
+    {name:'upgrader', min: '1'},
     {name:'claimer', min: '1'},
     {name:'repairer', min: '1'},
     {name:'builder', min: '1'},
@@ -12,7 +12,6 @@ var undocumented = [ {name: 'miner', min:'1'},
                      {name: 'longDistanceHarvester', min:'1'}
                      ];
 var minLDHarvesters = { 'W6N8': 2,
-                        'W5N7': 2,
                         'W4N8': 1}
 
 // create a new function for StructureSpawn
@@ -79,11 +78,9 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
             if (numberOfCreeps['miner'] > 0 ||
                 (room.storage != undefined && room.storage.store[RESOURCE_ENERGY] >= 150 + 550)) {
                 // create a lorry
-//                name = this.createLorry(150);
                 name = this.createLorry(maxEnergy);
                 if (!(name>0)){
                     name = this.createLorry(room.eneryAvailable);
-//                    name = this.createCustomCreep(room.energyAvailable, 'harvester');
                 }
             }
             // if there is no miner and not enough energy in Storage left
@@ -121,10 +118,8 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         if (name == undefined || !(name>0)) {
             for (let role of listOfRoles) {
                 let rolename = role['name'];
-                // if no claim order was found, check other roles
                 if (numberOfCreeps[rolename] < role['min'] && rolename != 'claimer') {
                     if (rolename == 'lorry' ) {
-                        //name = this.createLorry(150);
                         name = this.createLorry(maxEnergy);
                     }
                     else {
