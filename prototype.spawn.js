@@ -1,19 +1,19 @@
-var listOfRoles = [
-    {name:'harvester', min:'1'},
-    {name:'upgrader', min: '1'},
-    {name:'claimer', min: '1'},
-    {name:'repairer', min: '1'},
-    {name:'builder', min: '1'},
-    {name:'wallRepairer', min:'1'},
-    {name:'lorry', min:'2'},
-    ];
-
+var listOfRoles = []
+var roleNameList = [
+    'harvester',
+    'upgrader',
+    'claimer',
+    'repairer',
+    'builder',
+    'wallRepairer',
+    'lorry'
+];
+var adjacentRooms = []
 var undocumented = [ {name: 'miner', min:'1'},
                      {name: 'longDistanceHarvester', min:'1'}
                      ];
-var minLDHarvesters = { 'W6N8': 2,
-                        'W4N8': 1,
-                        'W5N7': 2}
+var minLDHarvesters = { 'W6N8': 1,
+                        'W4N8': 1}
 
 // create a new function for StructureSpawn
 StructureSpawn.prototype.spawnCreepsIfNecessary =
@@ -23,6 +23,8 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         // find all creeps in room
         /** @type {Array.<Creep>} */
         let creepsInRoom = room.find(FIND_MY_CREEPS);
+        let roomControllerLevel = room.controller.level;
+        let numOfSources = room.memory.sources.length;
         // count the number of creeps alive for each role in this room
         // _.sum will count the number of properties in Game.creeps filtered by the
         //  arrow function, which checks for the creep being a specific role
@@ -38,6 +40,33 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
             numberOfCreeps[rolename] = _.sum(creepsInRoom, 
                 (c) => c.memory.role == rolename);
         }
+        // generate listOfRoles
+        for (let rolename of roleNameList){
+            if (rolename == 'harvester'){
+                let num = 1;
+                if (roomControllerLevel < 3){
+                    num = numOfSources * 2 
+                }
+                listOfRoles.push({name: rolename, min: num})
+            }else{
+                if (roomControllerLevel <2 && rolename == 'lorry' ){
+                    listOfRoles.push({name:rolename,min:'0'})
+                }
+                if (roomControllerLevel > 2 && rolename == 'repairer'){
+                    listOfRoles.push({name:rolename,min:'2'});
+                }
+                listOfRoles.push({name:rolename,min:'1'})
+            }
+        }
+        /*
+        // generate adjacent room names
+        let roompos = room.name.match(/\d+/g);
+        adjacentRooms.push('W'+roompos[0]+'N'+(parseInt(roompos[1])+1))//north
+        adjacentRooms.push('W'+roompos[0]+'N'+(parseInt(roompos[1])-1))//south
+        adjacentRooms.push('W'+(parseInt(roompos[0])+1)+'N'+roompos[1])//west
+        adjacentRooms.push('W'+(parseInt(roompos[0])-1)+'N'+roompos[1])//east
+        */
+
         let maxEnergy = room.energyCapacityAvailable;
         let name = undefined;
         // Emergency switch to harvester

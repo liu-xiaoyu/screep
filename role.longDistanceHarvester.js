@@ -48,8 +48,9 @@ module.exports = {
                 if (creep.room.controller.my){
                     if (!(creep.room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_SPAWN}})>0)){
                         roleHarvester.run(creep);
+                    }else{
+                        roleBuilder.run(creep);
                     }
-                    roleBuilder.run(creep);
                 }else{
                     // find exit to home room
                     var exit = creep.room.findExitTo(creep.memory.home);
@@ -66,8 +67,9 @@ module.exports = {
                 if (creep.room.controller.my){
                     if (!(creep.room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_SPAWN}})>0)){
                         roleHarvester.run(creep);
+                    }else{
+                        roleBuilder.run(creep);
                     }
-                    roleBuilder.run(creep);
                 }else{
                     creep.getEnergy(false,true);
                 }

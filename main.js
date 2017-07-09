@@ -10,7 +10,7 @@ module.exports.loop = function() {
         // and checking if the creep is still alive
         if (Game.creeps[name] == undefined) {
             // if not, delete the memory entry
-            console.log("cleaning memory of "+name);
+            //console.log("cleaning memory of "+name);
             delete Memory.creeps[name];
         }
     }
@@ -26,31 +26,27 @@ module.exports.loop = function() {
         if (spawn.room.memory.sources == undefined){
             spawn.room.memory.sources = spawn.room.find(FIND_SOURCES);
         }
-        //for (let source of spawn.memory.sources){
-        //    if (spawn.room.memory.waitinglist == undefined){
-        //        spawn.room.memory.waitinglist = [0,0,0];
-        //    }
-        //}
         if (spawn.memory.highestlvl == undefined){
             spawn.memory.highestlvl = spawn.room.controller.level;
         }else if (spawn.memory.highestlvl < spawn.room.controller.level){
-            /*
-            let x = spawn.pos['x']-3;
-            //let y = spawn.pos['y']+spawn.memory.highestlvl+spawn.memory.highestlvl%2;
-            let y = spawn.pos['y']
+            let purpleBlueFlags = _.filter(Game.flags, f => f.color == 2 && f.secondaryColor == 3);
+            let extensionFlag = pupleBlueFlags[0];
+            let x = extensionFlag.pos['x'];
+            let y = extensionFlag.pos['y'];
             spawn.room.createFlag(x,y,'extensionSites',8,9);
-            for (let source of spawn.room.memory.sources){
-                spawn.room.createFlag(source['x'], source['y'], source['x']+source['y'], 7,8);
-            }
-            */
+            extensionFlag.remove()
+            spawn.room.createFlag(x,y+1,undefined,2,3);
+        //    spawn.memory.highestlvl = spawn.room.controller.level;
+        }
+
+        if (spawn.memory.highestlvl < spawn.room.controller.level){
+            let brownGreyFlag = _.filter(Game.flags, f => f.color == 8 && f.secondaryColor == 9)[0];
+            construct.extension(brownGreyFlag, STRUCTURE_EXTENSION);
+            brownGreyFlag.remove();
             spawn.memory.highestlvl = spawn.room.controller.level;
         }
-        let brownGreyFlags = _.filter(Game.flags, f => f.color == 8 && f.secondaryColor == 9);
-        for (let flag of brownGreyFlags){
-            construct.extension(flag, STRUCTURE_EXTENSION);
-            flag.remove();
-        }
-        if (spawn.room.controller.level == 2 && spawn.memory.container == undefined){
+
+        if (spawn.room.controller.level == 3 && spawn.memory.container == undefined){
             spawn.memory.container = false;
         }
         if (spawn.memory.container == false){
@@ -59,11 +55,10 @@ module.exports.loop = function() {
             }
             spawn.memory.container = true;
         }
-        if (spawn.room.controller.level == 3 && spawn.memory.road == undefined){
+        if (spawn.room.controller.level == 2 && spawn.memory.road == undefined){
             spawn.memory.road = false;
         }
         if (spawn.memory.road == false){
-//            for (let source of spawn.room.memory.sources){
             for (let source of spawn.room.find(FIND_SOURCES)){
                 construct.road(spawn, source);
             }

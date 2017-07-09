@@ -1,4 +1,4 @@
-var roleBuilder = require('role.builder');
+var roleRepairer = require('role.repairer');
 
 module.exports = {
     // a function to run the logic for this role
@@ -53,7 +53,7 @@ module.exports = {
             // if we can't fine one
             else {
                 // look for construction sites
-                roleBuilder.run(creep);
+                roleRepairer.run(creep);
             }
         }
         // if creep is supposed to get energy
