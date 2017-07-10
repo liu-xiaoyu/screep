@@ -7,14 +7,20 @@
  * mod.thing == 'a thing'; // true
  */
 var construct = {
-    extension: function(flag, structure_type){
-        let x = flag.pos['x'];
-        let y = flag.pos['y'];
-        flag.room.createConstructionSite(x-2,y,structure_type);
-        flag.room.createConstructionSite(x-1,y,structure_type);
-        flag.room.createConstructionSite(x,y,structure_type);
-        flag.room.createConstructionSite(x+1,y,structure_type);
-        flag.room.createConstructionSite(x+2,y,structure_type);
+    extension: function(room, x, y, structure_type, controller_lvl){
+        room.createConstructionSite(x-2,y,structure_type);
+        room.createConstructionSite(x-1,y,structure_type);
+        room.createConstructionSite(x,y,structure_type);
+        room.createConstructionSite(x+1,y,structure_type);
+        room.createConstructionSite(x+2,y,structure_type);
+        if (controller_lvl >= 4){
+            y = y+1;
+            room.createConstructionSite(x-2,y,structure_type);
+            room.createConstructionSite(x-1,y,structure_type);
+            room.createConstructionSite(x,y,structure_type);
+            room.createConstructionSite(x+1,y,structure_type);
+            room.createConstructionSite(x+2,y,structure_type);
+        }
     },
     road: function(source, target){
         let path = source.pos.findPathTo(target.pos);

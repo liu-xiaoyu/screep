@@ -30,19 +30,18 @@ module.exports.loop = function() {
             spawn.memory.highestlvl = spawn.room.controller.level;
         }else if (spawn.memory.highestlvl < spawn.room.controller.level){
             let purpleBlueFlags = _.filter(Game.flags, f => f.color == 2 && f.secondaryColor == 3);
-            let extensionFlag = pupleBlueFlags[0];
+            let extensionFlag = purpleBlueFlags[0];
             let x = extensionFlag.pos['x'];
             let y = extensionFlag.pos['y'];
-            spawn.room.createFlag(x,y,'extensionSites',8,9);
+            //spawn.room.createFlag(x,y,'extensionSites',8,9);
+            construct.extension(spawn.room, x, y, STRUCTURE_EXTENSION, spawn.memory.highestlvl);
             extensionFlag.remove()
-            spawn.room.createFlag(x,y+1,undefined,2,3);
-        //    spawn.memory.highestlvl = spawn.room.controller.level;
-        }
-
-        if (spawn.memory.highestlvl < spawn.room.controller.level){
-            let brownGreyFlag = _.filter(Game.flags, f => f.color == 8 && f.secondaryColor == 9)[0];
-            construct.extension(brownGreyFlag, STRUCTURE_EXTENSION);
-            brownGreyFlag.remove();
+            //lvl2 move 1, lvl3 move 2, rest move 3
+            let newy = spawn.memory.highestlvl;
+            if (spawn.memory.highestlvl>=4){
+                newy = 3;
+            }
+            spawn.room.createFlag(x,y+newy,undefined,2,3);
             spawn.memory.highestlvl = spawn.room.controller.level;
         }
 

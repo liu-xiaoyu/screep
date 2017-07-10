@@ -41,10 +41,13 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 if (roomControllerLevel <2 && rolename == 'lorry' ){
                     listOfRoles.push({name:rolename,min:'0'})
                 }
-                if (roomControllerLevel > 2 && rolename == 'repairer'){
-                    listOfRoles.push({name:rolename,min:'2'});
+                else if (roomControllerLevel > 2 && rolename == 'repairer'){
+                    let numOfConstructionSites = room.find(FIND_CONSTRUCTION_SITES).length;
+                    let num = 2 + numOfConstructionSites;
+                    listOfRoles.push({name:rolename,min:num});
+                }else{
+                    listOfRoles.push({name:rolename,min:'1'})
                 }
-                listOfRoles.push({name:rolename,min:'1'})
             }
         }
 
@@ -107,7 +110,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         if (numberOfCreeps['miner']>0 && !(numberOfCreeps['lorry'] > 0)) {
             // if there are still miners or enough energy in Storage left
             if (numberOfCreeps['miner'] > 0 ||
-                (room.storage != undefined && room.storage.store[RESOURCE_ENERGY] >= 150 + 550)) {
+                (room.storage != undefined && numberOfCreeps['miner'] > numberOfCreeps['lorry'] && room.storage.store[RESOURCE_ENERGY] >= 150 + 550)) {
                 // create a lorry
                 name = this.createLorry(maxEnergy);
                 if (!(name>0)){
