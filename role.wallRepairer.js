@@ -18,27 +18,52 @@ module.exports = {
 
         // if creep is supposed to repair something
         if (creep.memory.working == true) {
-            // find all walls in the room
-            var walls = creep.room.find(FIND_STRUCTURES, {
-                filter: (s) => s.structureType == STRUCTURE_WALL
+            var ramparts = creep.room.find(FIND_MY_STRUCTURES, {
+                filter: (s) => s.structureType == STRUCTURE_RAMPART
             });
 
             var target = undefined;
 
-            // loop with increasing percentages
-            for (let percentage = 0.0001; percentage <= 1; percentage = percentage + 0.0001){
-                // find a wall with less than percentage hits
-                for (let wall of walls) {
-                    if (wall.hits / wall.hitsMax < percentage) {
-                        target = wall;
+            if (ramparts.length==0){
+                // loop with increasing percentages
+                for (let percentage = 0.00001; percentage <= 0.0001; percentage = percentage + 0.000001){
+                    // find a wall with less than percentage hits
+                    for (let rampart of ramparts) {
+                        if (rampart.hits / ramparts.hitsMax < percentage) {
+                            target = rampart;
+                            break;
+                        }
+                    }
+                    // if there is one
+                    if (target != undefined) {
+                        // break the loop
                         break;
                     }
                 }
+            }
+            else{
+                // find all walls in the room
+                var walls = creep.room.find(FIND_STRUCTURES, {
+                    filter: (s) => s.structureType == STRUCTURE_WALL
+                });
 
-                // if there is one
-                if (target != undefined) {
-                    // break the loop
-                    break;
+                var target = undefined;
+
+                // loop with increasing percentages
+                for (let percentage = 0.0001; percentage <= 1; percentage = percentage + 0.0001){
+                    // find a wall with less than percentage hits
+                    for (let wall of walls) {
+                        if (wall.hits / wall.hitsMax < percentage) {
+                            target = wall;
+                            break;
+                        }
+                    }
+
+                    // if there is one
+                    if (target != undefined) {
+                        // break the loop
+                        break;
+                    }
                 }
             }
 
