@@ -43,7 +43,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 }
                 else if (roomControllerLevel > 2 && rolename == 'repairer'){
                     let numOfConstructionSites = room.find(FIND_CONSTRUCTION_SITES).length;
-                    let num = 2 + numOfConstructionSites;
+                    let num = 2 + numOfConstructionSites/5;
                     listOfRoles.push({name:rolename,min:num});
                 }else{
                     listOfRoles.push({name:rolename,min:'1'})

@@ -5,6 +5,7 @@ module.exports = {
     /** @param {Creep} creep */
     run: function(creep) {
         let weight = _.sum(creep.carry)
+        let maxHits = 300000
         // if creep is trying to repair something but has no energy left
         if (creep.memory.working == true && creep.carry.energy == 0) {
             // switch state
@@ -25,7 +26,8 @@ module.exports = {
                 // the second argument for findClosestByPath is an object which takes
                 // a property called filter which can be a function
                 // we use the arrow operator to define it
-                filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL
+                //filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL
+                filter: (s) => s.hits < maxHits && s.structureType != STRUCTURE_WALL
             });
 
             // if we find one
