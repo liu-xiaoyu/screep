@@ -20,7 +20,9 @@ module.exports = {
                 // the second argument for findClosestByPath is an object which takes
                 // a property called filter which can be a function
                 // we use the arrow operator to define it
-                filter: (s) => (s.structureType == STRUCTURE_SPAWN
+                filter: (s) => ( 
+                             ( creep.room.memory.linkfrom && creep.room.memory.linkfrom.energy < creep.room.memory.linkfrom.energyCapacity )
+                             || s.structureType == STRUCTURE_SPAWN
                              || s.structureType == STRUCTURE_EXTENSION
                              || s.structureType == STRUCTURE_TOWER)
                              && s.energy < s.energyCapacity
@@ -48,21 +50,26 @@ module.exports = {
                 }
             }
             else{
+                let target = undefined;
+                if (!(creep.room.memory.linkto>0)&&creep.room.memory.linkto.energy>0){
+                    target = creep.room.memory.linkto;
+                }
+                else{
                 // find closest container
-                let container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                    filter: s => s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 0
-                });
-
-                if (container == undefined) {
-                    container = creep.room.storage;
+                    target = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+                        filter: s => s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 0
+                    });
+                }
+                if (target == undefined) {
+                    target = creep.room.storage;
                 }
 
                 // if one was found
-                if (container != undefined) {
+                if (target != undefined) {
                     // try to withdraw energy, if the container is not in range
-                    if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         // move towards it
-                        creep.moveTo(container);
+                        creep.moveTo(target);
                     }
                 }
             }

@@ -38,13 +38,13 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 }
                 listOfRoles.push({name: rolename, min: num})
             }else{
-                if (roomControllerLevel <2 && rolename == 'lorry' ){
-                    listOfRoles.push({name:rolename,min:'0'})
+                if (rolename == 'lorry'){
+                    listOfRoles.push({name:rolename,min:numOfSources})
                 }
                 else if (roomControllerLevel > 2 && rolename == 'wallRepairer'){
-                    let numOfConstructionSites = room.find(FIND_CONSTRUCTION_SITES).length;
-                    let num = 2 + numOfConstructionSites/5;
-                    listOfRoles.push({name:rolename,min:num});
+                    //let numOfConstructionSites = room.find(FIND_CONSTRUCTION_SITES).length;
+                    //let num = 2 + numOfConstructionSites/5;
+                    listOfRoles.push({name:rolename,min:'2'});
                 }else{
                     listOfRoles.push({name:rolename,min:'1'})
                 }
@@ -114,13 +114,8 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 // create a lorry
                 name = this.createLorry(maxEnergy);
                 if (!(name>0)){
-                    name = this.createLorry(room.eneryAvailable);
+                    name = this.createLorry(room.energyAvailable);
                 }
-            }
-            // if there is no miner and not enough energy in Storage left
-            else if (numberOfCreeps['harvester']<=2){
-                // create a harvester because it can work on its own
-                name = this.createCustomCreep(room.energyAvailable, 'harvester');
             }
         }
         // if no backup creep is required
@@ -135,10 +130,10 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 }
             }
         }
-
+        this.room.memory.claimRoom=undefined;
         if (name == undefined || !(name>0)) {
             // check for claim order
-            if (this.room.memory.claimRoom != undefined) {
+            if (this.room.memory.claimRoom != undefined && !(numberOfCreeps['claimer']>0)) {
                 // try to spawn a claimer
                 name = this.createClaimer(this.room.memory.claimRoom);
                 // if that worked

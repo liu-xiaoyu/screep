@@ -64,6 +64,17 @@ module.exports.loop = function() {
             construct.road(spawn, spawn.room.controller);
             spawn.memory.road = true;
         }
+        let linkfromFlag = _.filter(Game.flags, f => f.color == 1 && f.secondaryColor == 1)[0];
+        let linktoFlag = _.filter(Game.flags, f => f.color == 1 && f.secondaryColor == 2)[0];
+        linkfrom = linkfromFlag.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: {structureType: STRUCTURE_LINK}})[0]
+        linkto = linktoFlag.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: {structureType: STRUCTURE_LINK}})[0]
+        spawn.room.memory.linkfrom = linkfrom;
+        spawn.room.memory.linkto = linkto;
+        if (!(linkfrom>0)){
+            if (linkfrom.energy > 0.60 * linkfrom.energyCapacity){
+                linkfrom.transferEnergy(linkto);
+            }
+        }
     }
     // find all towers
     var towers = _.filter(Game.structures, s => s.structureType == STRUCTURE_TOWER);
@@ -72,7 +83,6 @@ module.exports.loop = function() {
         // run tower logic
         tower.defend();
     }
-
     // for each spawn
     for (let spawnName in Game.spawns) {
         // run spawn logic
