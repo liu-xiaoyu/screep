@@ -14,7 +14,6 @@ module.exports = {
             // switch state
             creep.memory.working = true;
         }
-
         // if creep is supposed to transfer energy to a structure
         if (creep.memory.working == true) {
             // if in home room
@@ -24,15 +23,11 @@ module.exports = {
                     // the second argument for findClosestByPath is an object which takes
                     // a property called filter which can be a function
                     // we use the arrow operator to define it
-                    filter: (s) => (s.structureType == STRUCTURE_LINK
-                             || s.structureType == STRUCTURE_SPAWN
+                    filter: (s) => (s.structureType == STRUCTURE_SPAWN
                              || s.structureType == STRUCTURE_EXTENSION
+                             || s.structureType == STRUCTURE_LINK
                              || s.structureType == STRUCTURE_TOWER)
-                             && s.energy < s.energyCapacity && s != s.room.memory.linkto
-//                    filter: (s) => (s.structureType == STRUCTURE_SPAWN
-//                                 || s.structureType == STRUCTURE_EXTENSION
-//                                 || s.structureType == STRUCTURE_TOWER)
-//                                 && s.energy < s.energyCapacity
+                             && s.energy < s.energyCapacity
                 });
 
                 if (structure == undefined) {
@@ -52,9 +47,9 @@ module.exports = {
             else {
                 if (creep.room.controller.my){
                     if (!(creep.room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_SPAWN}})>0)){
-                        roleHarvester.run(creep);
-                    }else{
                         roleBuilder.run(creep);
+                    }else{
+                        roleHarvester.run(creep);
                     }
                 }else{
                     // find exit to home room

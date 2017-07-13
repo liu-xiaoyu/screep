@@ -7,7 +7,16 @@
  * mod.thing == 'a thing'; // true
  */
 var construct = {
-    extension: function(room, x, y, structure_type, controller_lvl){
+    extension: function(room, x, y, controller_lvl){
+        let structure_type = STRUCTURE_EXTENSION;
+        room.createConstructureSite(x-3,y,STRUCTURE_ROAD);
+        room.createConstructureSite(x+3,y,STRUCTURE_ROAD);
+        room.createConstructureSite(x-2,y-1,STRUCTURE_ROAD);
+        room.createConstructureSite(x-1,y-1,STRUCTURE_ROAD);
+        room.createConstructureSite(x,y-1,STRUCTURE_ROAD);
+        room.createConstructureSite(x+1,y-1,STRUCTURE_ROAD);
+        room.createConstructureSite(x+2,y-1,STRUCTURE_ROAD);
+
         room.createConstructionSite(x-2,y,structure_type);
         room.createConstructionSite(x-1,y,structure_type);
         room.createConstructionSite(x,y,structure_type);
@@ -20,6 +29,14 @@ var construct = {
             room.createConstructionSite(x,y,structure_type);
             room.createConstructionSite(x+1,y,structure_type);
             room.createConstructionSite(x+2,y,structure_type);
+
+            room.createConstructureSite(x-3,y,STRUCTURE_ROAD);
+            room.createConstructureSite(x+3,y,STRUCTURE_ROAD);
+            room.createConstructureSite(x-2,y+1,STRUCTURE_ROAD);
+            room.createConstructureSite(x-1,y+1,STRUCTURE_ROAD);
+            room.createConstructureSite(x,y+1,STRUCTURE_ROAD);
+            room.createConstructureSite(x+1,y+1,STRUCTURE_ROAD);
+            room.createConstructureSite(x+2,y+1,STRUCTURE_ROAD);
         }
     },
     road: function(source, target){

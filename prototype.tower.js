@@ -9,7 +9,7 @@ StructureTower.prototype.defend =
             this.attack(target);
         }
         // repair
-        if (!(target>0)){
+        else if (!(target>0) && this.energy > 0.3 * this.energyCapacity){
             target = this.pos.findClosestByRange(FIND_STRUCTURES, {filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL && s.structureType != STRUCTURE_RAMPART});
             if(target != undefined) {
                 this.repair(target);

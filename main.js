@@ -34,7 +34,7 @@ module.exports.loop = function() {
             let x = extensionFlag.pos['x'];
             let y = extensionFlag.pos['y'];
             //spawn.room.createFlag(x,y,'extensionSites',8,9);
-            construct.extension(spawn.room, x, y, STRUCTURE_EXTENSION, spawn.memory.highestlvl);
+            construct.extension(spawn.room, x, y, spawn.memory.highestlvl);
             extensionFlag.remove()
             //lvl2 move 1, lvl3 move 2, rest move 3
             let newy = spawn.memory.highestlvl;
@@ -68,9 +68,9 @@ module.exports.loop = function() {
         let linktoFlag = _.filter(Game.flags, f => f.color == 1 && f.secondaryColor == 2)[0];
         linkfrom = linkfromFlag.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: {structureType: STRUCTURE_LINK}})[0]
         linkto = linktoFlag.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: {structureType: STRUCTURE_LINK}})[0]
-        spawn.room.memory.linkfrom = linkfrom;
-        spawn.room.memory.linkto = linkto;
-        if (!(linkfrom>0)){
+        if (!(linkfrom>0)&&!(linkto>0)){
+            spawn.room.memory.linkfrom = linkfrom.id;
+            spawn.room.memory.linkto = linkto.id;
             if (linkfrom.energy > 0.60 * linkfrom.energyCapacity){
                 linkfrom.transferEnergy(linkto);
             }

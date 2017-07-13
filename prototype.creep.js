@@ -34,7 +34,7 @@ Creep.prototype.getEnergy =
             // find closest container
             container = this.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: s => (
-                            ( this.room.memory.linkto && this.room.memory.linkto.energy > 0)
+                            ( s.id == this.room.memory.linkto && s.energy > 0)
                             || (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE) &&
                              s.store[RESOURCE_ENERGY] > 0)
             });

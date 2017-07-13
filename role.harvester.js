@@ -23,14 +23,11 @@ module.exports = {
                 // a property called filter which can be a function
                 // we use the arrow operator to define it
                 filter: (s) => ( 
-                             s.structureType == STRUCTURE_SPAWN
+                             s.id == creep.room.memory.linkfrom 
+                             || s.structureType == STRUCTURE_SPAWN
                              || s.structureType == STRUCTURE_EXTENSION
                              || s.structureType == STRUCTURE_TOWER)
                              && s.energy < s.energyCapacity 
-//                filter: (s) => (s.structureType == STRUCTURE_SPAWN
-//                             || s.structureType == STRUCTURE_EXTENSION
-//                             || s.structureType == STRUCTURE_TOWER)
-//                             && s.energy < s.energyCapacity
             });
 
             if (structure == undefined) {
@@ -48,7 +45,7 @@ module.exports = {
         }
         // if creep is supposed to harvest energy from source
         else {
-            creep.getEnergy(false,true);
+            creep.getEnergy(true,true);
         }
     }
 };

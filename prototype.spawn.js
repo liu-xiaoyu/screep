@@ -10,8 +10,11 @@ var roleNameList = [
 var undocumented = [ {name: 'miner', min:'1'},
                      {name: 'longDistanceHarvester', min:'1'}
                      ];
-var minLDHarvesters = { 'W6N8': 1,
-                        'W4N8': 1}
+var minLDHarvesters = { 'W5N8': {'W6N8': 1,'W4N8': 1,'W5N9': 1},
+                        'W12S63': {'W12S64': 1}
+                        }
+var claimRoomList = {'W12S63': 'W12S64', 
+                     'W5N8': 'W6N8'}
 
 // create a new function for StructureSpawn
 StructureSpawn.prototype.spawnCreepsIfNecessary =
@@ -41,10 +44,14 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 if (rolename == 'lorry'){
                     listOfRoles.push({name:rolename,min:numOfSources})
                 }
+                else if (rolename == 'repairer' 
+                    && room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}}).length>0){
+                    listOfRoles.push({name:rolename,min:'0'})
+                }
                 else if (roomControllerLevel > 2 && rolename == 'wallRepairer'){
                     //let numOfConstructionSites = room.find(FIND_CONSTRUCTION_SITES).length;
                     //let num = 2 + numOfConstructionSites/5;
-                    listOfRoles.push({name:rolename,min:'2'});
+                    listOfRoles.push({name:rolename,min:'1'});
                 }else{
                     listOfRoles.push({name:rolename,min:'1'})
                 }
@@ -130,16 +137,27 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 }
             }
         }
-        this.room.memory.claimRoom=undefined;
+        if (this.room.memory.gcllvl==undefined){
+            this.room.memory.gcllvl = Game.gcl.level;
+        }
+        if (Game.gcl.level>this.room.memory.gcllvl){
+            console.log('GCL level increased')
+            this.room.memory.claimRoom = claimRoomList[this.room.name];
+            this.room.memory.gcllvl = Game.gcl.level;
+        }
+
         if (name == undefined || !(name>0)) {
             // check for claim order
             if (this.room.memory.claimRoom != undefined && !(numberOfCreeps['claimer']>0)) {
-                // try to spawn a claimer
-                name = this.createClaimer(this.room.memory.claimRoom);
-                // if that worked
-                if (name != undefined && _.isString(name)) {
-                    // delete the claim order
-                    delete this.memory.claimRoom;
+                if (_.sum(Game.creeps, (c) =>
+                    c.memory.role == 'longDistanceHarvester' && c.memory.target == this.room.memory.claimRoom)>1){
+                    // try to spawn a claimer only when there's at least two longDistanceHarvester
+                    name = this.createClaimer(this.room.memory.claimRoom);
+                    // if that worked
+                    if (name != undefined && _.isString(name)) {
+                        // delete the claim order
+                        delete this.room.memory.claimRoom;
+                    }
                 }
             }
         }
@@ -164,11 +182,11 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
         let numberOfLongDistanceHarvesters = {};
         if (roomControllerLevel >= 3 && (name == undefined || !(name>0))) {
             // count the number of long distance harvesters globally
-            for (let roomName in minLDHarvesters) {
+            for (let roomName in minLDHarvesters[this.room.name]) {
                 numberOfLongDistanceHarvesters[roomName] = _.sum(Game.creeps, (c) =>
                     c.memory.role == 'longDistanceHarvester' && c.memory.target == roomName)
 
-                if (minLDHarvesters[roomName] > numberOfLongDistanceHarvesters[roomName]) {
+                if (minLDHarvesters[this.room.name][roomName] > numberOfLongDistanceHarvesters[roomName]) {
                     name = this.createLongDistanceHarvester(maxEnergy, 2, room.name, roomName, 0);
                 }
             }
