@@ -48,7 +48,7 @@ var construct = {
     container: function(room,target){
         let sites = room.lookForAtArea('terrain', target.pos['y']-1, target.pos['x']-1 ,target.pos['y']+1,target.pos['x']+1, true)
         for (let site of sites){
-            if (site['terrain']=='plain'){
+            if (site['terrain']=='plain' || site['terrain']=='swamp'){
                 room.createConstructionSite(site['x'],site['y'],STRUCTURE_CONTAINER);
                 break;
             }

@@ -1,5 +1,6 @@
 var roleBuilder = require('role.builder');
 var roleHarvester = require('role.harvester');
+var roleUpgrader = require('role.upgrader');
 module.exports = {
     // a function to run the logic for this role
     /** @param {Creep} creep */
@@ -48,6 +49,8 @@ module.exports = {
                 if (creep.room.controller.my){
                     if (!(creep.room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_SPAWN}})>0)){
                         roleBuilder.run(creep);
+                    }else if (creep.room.controller.ticksToDowngrade < 2000){
+                        roleUpgrader.run(creep);
                     }else{
                         roleHarvester.run(creep);
                     }
