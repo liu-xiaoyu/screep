@@ -48,6 +48,9 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                     && room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}}).length>0){
                     listOfRoles.push({name:rolename,min:'0'})
                 }
+                else if (rolename == 'upgrader' && roomControllerLevel > 2){
+                    listOfRoles.push({name:rolename,min:'0'})
+                }
                 else if (roomControllerLevel > 2 && rolename == 'wallRepairer'){
                     //let numOfConstructionSites = room.find(FIND_CONSTRUCTION_SITES).length;
                     //let num = 2 + numOfConstructionSites/5;

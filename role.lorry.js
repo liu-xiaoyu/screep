@@ -44,7 +44,7 @@ module.exports = {
         // if creep is supposed to get energy
         else {
             let dropped_energy = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES);
-            if (dropped_energy != undefined){
+            if (dropped_energy != undefined && dropped_energy.energy > 100){
                 if (creep.pickup(dropped_energy) == ERR_NOT_IN_RANGE){
                     creep.moveTo(dropped_energy);
                 }

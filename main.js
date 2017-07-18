@@ -29,12 +29,12 @@ module.exports.loop = function() {
         if (spawn.memory.highestlvl == undefined){
             spawn.memory.highestlvl = spawn.room.controller.level;
         }else if (spawn.memory.highestlvl < spawn.room.controller.level){
-            let purpleBlueFlags = _.filter(Game.flags, f => f.color == 2 && f.secondaryColor == 3);
+            let purpleBlueFlags = _.filter(Game.flags, f => f.color == 2 && f.secondaryColor == 3 && f.room.name == spawn.room.name);
             let extensionFlag = purpleBlueFlags[0];
             let x = extensionFlag.pos['x'];
             let y = extensionFlag.pos['y'];
             //spawn.room.createFlag(x,y,'extensionSites',8,9);
-            construct.extension(spawn.room, x, y, spawn.memory.highestlvl);
+            construct.extension(spawn.room.name, x, y, spawn.memory.highestlvl);
             extensionFlag.remove()
             //lvl2 move 1, lvl3 move 2, rest move 3
             let newy = spawn.memory.highestlvl;
@@ -64,15 +64,17 @@ module.exports.loop = function() {
             construct.road(spawn, spawn.room.controller);
             spawn.memory.road = true;
         }
-        let linkfromFlag = _.filter(Game.flags, f => f.color == 1 && f.secondaryColor == 1)[0];
-        let linktoFlag = _.filter(Game.flags, f => f.color == 1 && f.secondaryColor == 2)[0];
-        linkfrom = linkfromFlag.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: {structureType: STRUCTURE_LINK}})[0]
-        linkto = linktoFlag.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: {structureType: STRUCTURE_LINK}})[0]
-        if (!(linkfrom>0)&&!(linkto>0)){
-            spawn.room.memory.linkfrom = linkfrom.id;
-            spawn.room.memory.linkto = linkto.id;
-            if (linkfrom.energy > 0.60 * linkfrom.energyCapacity){
-                linkfrom.transferEnergy(linkto);
+        let linkfromFlag = _.filter(Game.flags, f => f.color == 1 && f.secondaryColor == 1 && f.room.name == spawn.room.name)[0];
+        let linktoFlag = _.filter(Game.flags, f => f.color == 1 && f.secondaryColor == 2 && f.room.name == spawn.room.name)[0];
+        if (!(linkfromFlag==undefined) && !(linktoFlag==undefined)){
+            let linkfrom = linkfromFlag.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: {structureType: STRUCTURE_LINK}})[0]
+            let linkto = linktoFlag.pos.findInRange(FIND_MY_STRUCTURES, 1, {filter: {structureType: STRUCTURE_LINK}})[0]
+            if (!(linkfrom==undefined)&&!(linkto==undefined)){
+                spawn.room.memory.linkfrom = linkfrom.id;
+                spawn.room.memory.linkto = linkto.id;
+                if (linkfrom.energy > 0.60 * linkfrom.energyCapacity){
+                    linkfrom.transferEnergy(linkto);
+                }
             }
         }
     }

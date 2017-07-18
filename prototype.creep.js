@@ -39,7 +39,7 @@ Creep.prototype.getEnergy =
                              s.store[RESOURCE_ENERGY] > 0)
             });
             // if one was found
-            if (container != undefined) {
+            if (container != undefined && container.store[RESOURCE_ENERGY] > 100) {
                 // try to withdraw energy, if the container is not in range
                 if (this.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     // move towards it
