@@ -11,10 +11,9 @@ var undocumented = [ {name: 'miner', min:'1'},
                      {name: 'longDistanceHarvester', min:'1'}
                      ];
 var minLDHarvesters = { 'W5N8': {'W6N8': 1,'W4N8': 1,'W5N9': 1},
-                        'W12S63': {'W12S64': 1}
+                        'W12S63': {}
                         }
-var claimRoomList = {'W12S63': 'W12S64', 
-                     'W5N8': 'W6N8'}
+var claimRoomList = {}
 
 // create a new function for StructureSpawn
 StructureSpawn.prototype.spawnCreepsIfNecessary =
