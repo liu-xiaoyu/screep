@@ -36,7 +36,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
             if (rolename == 'harvester'){
                 let num = 1;
                 if (roomControllerLevel < 3){
-                    num = numOfSources * 2 
+                    num = numOfSources + 1
                 }
                 listOfRoles.push({name: rolename, min: num})
             }else{
@@ -45,10 +45,10 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 }
                 else if (rolename == 'repairer' 
                     && room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}}).length>0){
-                    listOfRoles.push({name:rolename,min:'0'})
+//                    listOfRoles.push({name:rolename,min:'0'})
                 }
                 else if (rolename == 'upgrader' && roomControllerLevel > 2){
-                    listOfRoles.push({name:rolename,min:'0'})
+ //                   listOfRoles.push({name:rolename,min:'0'})
                 }
                 else if (roomControllerLevel > 2 && rolename == 'wallRepairer'){
                     //let numOfConstructionSites = room.find(FIND_CONSTRUCTION_SITES).length;
