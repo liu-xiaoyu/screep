@@ -34,7 +34,7 @@ module.exports.loop = function() {
             let x = extensionFlag.pos['x'];
             let y = extensionFlag.pos['y'];
             //spawn.room.createFlag(x,y,'extensionSites',8,9);
-            construct.extension(spawn.room.name, x, y, spawn.memory.highestlvl);
+            construct.extension(spawn.room.name, x, y, spawn.memory.highestlvl+1);
             extensionFlag.remove()
             //lvl2 move 1, lvl3 move 2, rest move 3
             let newy = spawn.memory.highestlvl;
@@ -58,7 +58,7 @@ module.exports.loop = function() {
             spawn.memory.road = false;
         }
         if (spawn.memory.road == false){
-            for (let source of spawn.room.find(FIND_SOURCES)){
+            for (let source of spawn.room.find(FIND_SURCES)){
                 construct.road(spawn, source);
             }
             construct.road(spawn, spawn.room.controller);
