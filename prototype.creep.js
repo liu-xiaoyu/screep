@@ -36,10 +36,10 @@ Creep.prototype.getEnergy =
                 filter: s => (
                             ( s.id == this.room.memory.linkto && s.energy > 0)
                             || (s.structureType == STRUCTURE_CONTAINER || s.structureType == STRUCTURE_STORAGE) &&
-                             s.store[RESOURCE_ENERGY] > 0)
+                             s.store[RESOURCE_ENERGY] > 100)
             });
             // if one was found
-            if (container != undefined && container.store[RESOURCE_ENERGY] > 100) {
+            if (container != undefined) {
                 // try to withdraw energy, if the container is not in range
                 if (this.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     // move towards it
