@@ -31,7 +31,7 @@ module.exports = {
                              s.id == creep.room.memory.linkfrom 
                              || s.structureType == STRUCTURE_SPAWN
                              || s.structureType == STRUCTURE_EXTENSION
-                             || s.structureType == STRUCTURE_TOWER)
+                             || (s.structureType == STRUCTURE_TOWER && s.energy < 0.9 * s.energyCapacity) )
                              && s.energy < s.energyCapacity 
             });
 
