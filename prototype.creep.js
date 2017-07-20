@@ -51,7 +51,7 @@ Creep.prototype.getEnergy =
             }
         }
         // if no container was found and the Creep should look for Sources
-        if (container == undefined || container.store[RESOURCE_ENERGY] <= 100 && useSource) {
+        if ((container == undefined || container.store[RESOURCE_ENERGY] <= 100) && useSource) {
             // find closest source
             var source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
 
