@@ -1,3 +1,5 @@
+var roleBuilder = require('role.builder');
+var roleUpgrader = require('role.upgrader');
 module.exports = {
     // a function to run the logic for this role
     /** @param {Creep} creep */
@@ -17,6 +19,9 @@ module.exports = {
 
         // if creep is supposed to transfer energy to a structure
         if (creep.memory.working == true) {
+            if (creep.room.controller.tickesToDowngrade < 5000){
+                roleUpgrader.run(creep);
+            }
             // find closest spawn, extension or tower which is not full
             var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                 // the second argument for findClosestByPath is an object which takes
@@ -32,6 +37,10 @@ module.exports = {
 
             if (structure == undefined) {
                 structure = creep.room.storage;
+            }
+
+            if (structure == undefined){
+                roleBuilder.run(creep);
             }
 
             // if we found one

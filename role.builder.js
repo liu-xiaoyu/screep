@@ -28,6 +28,9 @@ module.exports = {
 
         // if creep is supposed to complete a constructionSite
         if (creep.memory.working == true) {
+            if (creep.room.controller.tickesToDowngrade < 5000){
+                roleUpgrader.run(creep);
+            }
             // find closest constructionSite
             var constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
             // if one is found

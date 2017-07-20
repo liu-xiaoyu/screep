@@ -44,8 +44,8 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                     listOfRoles.push({name:rolename,min:numOfSources})
                 }
                 else if (rolename == 'repairer' 
-                    && room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}}).length>0){
-//                    listOfRoles.push({name:rolename,min:'0'})
+                    && room.find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}}).length>1){
+                    listOfRoles.push({name:rolename,min:'2'})
                 }
                 else if (rolename == 'upgrader' && roomControllerLevel > 2){
  //                   listOfRoles.push({name:rolename,min:'0'})
@@ -103,7 +103,7 @@ StructureSpawn.prototype.spawnCreepsIfNecessary =
                 // check whether or not the source has a container
                 /** @type {Array.StructureContainer} */
                 let containers = source.pos.findInRange(FIND_STRUCTURES, 1, {
-                    filter: s => s.structureType == STRUCTURE_CONTAINER
+                    filter: s => s.structureType == STRUCTURE_CONTAINER 
                 });
                 // if there is a container next to the source
                 if (containers.length > 0) {
