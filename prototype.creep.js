@@ -38,7 +38,7 @@ Creep.prototype.getEnergy =
                             || s.structureType == STRUCTURE_CONTAINER &&
                              s.store[RESOURCE_ENERGY] > 100)
             });
-            if (container == undefined){
+            if (container == undefined && this.room.storage.store > 0){
                 container = this.room.storage;
             }
             // if one was found
