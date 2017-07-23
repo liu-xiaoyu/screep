@@ -74,7 +74,18 @@ module.exports = {
                         roleBuilder.run(creep);
                     }
                 }else{
-                    creep.getEnergy(false,true);
+                    if (!(creep.room.ldroad>0)){
+                        let path = creep.pos.findPathTo(FIND_SOURCES);
+                        for (let dot of path){
+                            creep.room.createConstructionSite(dot['x'],dot['y',STRUCTURE_ROAD]);
+                        }
+                        creep.room.ldroad = 1;
+                    }
+                    if (!(creep.room.find(FIND_CONSTRUCTION_SITES))>0){
+                        roleBuilder.run(creep);
+                    }else{
+                        creep.getEnergy(false,true);
+                    }
                 }
             }
             // if not in target room

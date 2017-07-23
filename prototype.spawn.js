@@ -10,7 +10,7 @@ var roleNameList = [
 var undocumented = [ {name: 'miner', min:'1'},
                      {name: 'longDistanceHarvester', min:'1'}
                      ];
-var minLDHarvesters = { 'W5N8': {'W6N8': 1,'W4N8': 1,'W5N9': 1},
+var minLDHarvesters = { 'W5N8': {'W5N7': 1,'W4N8': 1,'W5N9': 1},
                         'W12S63': {}
                         }
 var claimRoomList = {}
@@ -293,4 +293,96 @@ StructureSpawn.prototype.createLorry =
 
         // create creep with the created body and the role 'lorry'
         return this.createCreep(body, undefined, { role: 'lorry', working: false });
+    };
+
+// create a healer
+StructureSpawn.prototype.createHealer =
+    function(energy, numberOfHeal) {
+        // if energy is not enough, just make sure we have at least one heal and one move
+        if (numberOfHeal * 250 + 80 >= energy){
+            numberOfHeal = 1;
+        }
+        let remain_energy = energy;
+        var body = {};
+        for (let i = 0; i < numberOfHeal; i++){
+            if (remain_energy > 250){
+                body.push(HEAL);
+                remain_energy = remain_energy - 250;
+            }
+        }
+        while(remain_energy > 0){
+            if (remain_energy>80){
+                body.push(MOVE);
+                remain_energy = remain_energy - 80;
+            }
+            if (remain_energy>10){
+                body.push(TOUGH);
+                remain_energy = remain_energy - 10;
+            }
+            else{
+                break;
+            }
+        }
+        return this.createCreep(body, undefined, { role: 'healer', working: false});
+    };
+// create a attacker 
+StructureSpawn.prototype.createAttacker =
+    function(energy, numberOfAttack) {
+        // if energy is not enough, just make sure we have at least one attack and one move
+        if (numberOfAttack * 80 + 80 >= energy){
+            numberOfAttack = 1;
+        }
+        let remain_energy = energy;
+        var body = {};
+        for (let i = 0; i < numberOfAttack; i++){
+            if (remain_energy > 80){
+                body.push(ATTACK);
+                remain_energy = remain_energy - 80;
+            }
+        }
+        while(remain_energy > 0){
+            if (remain_energy>80){
+                body.push(MOVE);
+                remain_energy = remain_energy - 80;
+            }
+            if (remain_energy>10){
+                body.push(TOUGH);
+                remain_energy = remain_energy - 10;
+            }
+            else{
+                break;
+            }
+        }
+        return this.createCreep(body, undefined, { role: 'attacker', working: false});
+    };
+
+// create a rangeAttacker 
+StructureSpawn.prototype.createRangeAttacker =
+    function(energy, numberOfRangeAttack) {
+        // if energy is not enough, just make sure we have at least one attack and one move
+        if (numberOfRangeAttack * 150 + 80 >= energy){
+            numberOfRangeAttack = 1;
+        }
+        let remain_energy = energy;
+        var body = {};
+        for (let i = 0; i < numberOfRangeAttack; i++){
+            if (remain_energy > 150){
+                body.push(RANGED_ATTACK);
+                remain_energy = remain_energy - 150;
+            }
+        }
+        while(remain_energy > 0){
+            if (remain_energy>80){
+                body.push(MOVE);
+                remain_energy = remain_energy - 80;
+            }
+            if (remain_energy>10){
+                body.push(TOUGH);
+                remain_energy = remain_energy - 10;
+            }
+            else{
+                break;
+            }
+        }
+        return this.createCreep(body, undefined, { role: 'rangeattacker', working: false});
     };
